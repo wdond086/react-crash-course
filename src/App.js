@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import AddTask from "./components/AddTask";
 import Footer from "./components/Footer";
 import About from "./components/About";
+import Button from "./components/Button";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 // Useeffect for action to be executed a page load
@@ -12,6 +13,10 @@ function App() {
   // App level state
   const [showAddTask, setShowAddTask] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [state, setState] = useState({
+    title: 'Current count',
+    count: 0
+  })
 
   useEffect(() => {
     const getTasks = async () => {
@@ -87,6 +92,12 @@ function App() {
     setShowAddTask(!showAddTask);
   };
 
+
+  // Rememeber that state is not updateable. You have to completely ovewrite it.
+  const stateUpdater = () => {
+    setState({...state, count: state.count + 1})
+  }
+
   const home = (
     <div>
       {showAddTask ? <AddTask onAdd={addTask}></AddTask> : ""}
@@ -106,6 +117,10 @@ function App() {
     <Router>
       <div className="App container">
         <Header onAdd={toggleShowAdd} showAdd={showAddTask}></Header>
+        <div>{state.title}</div>
+        <div>{state.count}</div>
+        {state.count === 53 && <div><p>Number of count exceeded</p></div>}
+        {state.count !== 53 && <Button color='purple' text='Run State Updater' onClick={stateUpdater}></Button>}
         <Routes>
           <Route path="/" exact element={home}></Route>
           <Route path="/about" element={<About></About>}></Route>
